@@ -7,13 +7,24 @@ from django.utils import timezone
 from core.models import UserProfile, Repository
 
 
+"""Returns the request url with pagination"""
+def get_req_url(username,page):
+	repos_url = 'https://api.github.com/users/{}/repos?page={}'.format(username,page)
+	return repos_url
+
+
 def get_repositories(username):
     """Returns the repositories of a user using the Github API."""
-    repos_url = 'https://api.github.com/users/{}/repos'.format(username)
-    response = requests.get(repos_url)
+    page = 1
     repos = []
-    if response.status_code == 200:
-        repos = response.json()
+    while True:
+    	response = requests.get(get_req_url(username,page))
+    	if len(response.json()) == 0:
+    		break
+    	if response.status_code == 200:
+    		repos = repos + response.json()
+    	page = page + 1
+
     return repos
 
 
