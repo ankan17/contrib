@@ -13,14 +13,14 @@ def get_repositories(username):
     page = 1
     repos = []
     while True:
-    	response = requests.get(repos_url+str(page))
-    	if response.status_code == 200:
-    		if len(response.json()) == 0:
-    			break
-    		repos.extend(response.json())
-    		if len(response.json()) < 100:
-    			break
-    	page += 1
+        response = requests.get(repos_url+str(page))
+        if response.status_code == 200:
+            if len(response.json()) == 0:
+                break
+            repos.extend(response.json())
+            if len(response.json()) < 100:
+                break
+        page += 1
     return repos
 
 
