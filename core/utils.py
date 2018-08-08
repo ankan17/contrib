@@ -7,27 +7,21 @@ from django.utils import timezone
 from core.models import UserProfile, Repository
 
 
-"""Generates the request URL based on the user details"""
-def get_request_url(username):
-
-	user_details_url = 'https://api.github.com/users/{}'.format(username)
-	response = requests.get(user_details_url)
-	if response.status_code == 200:
-		public_repos = response.json()['public_repos']
-		repos_url = 'https://api.github.com/users/{}/repos?per_page={}'.format(username,public_repos)
-		return repos_url
-
-
-
 def get_repositories(username):
     """Returns the repositories of a user using the Github API."""
-    repos_url = get_request_url(username)
-    response = requests.get(repos_url)
+    repos_url = 'https://api.github.com/users/{}/repos?per_page=100&page='.format(username)
+    page = 1
     repos = []
-    if response.status_code == 200:
-        repos = response.json()
+    while True:
+    	response = requests.get(repos_url+str(page))
+    	if response.status_code == 200:
+    		if len(response.json()) == 0:
+    			break
+    		repos.extend(response.json())
+    		if len(response.json()) < 100:
+    			break
+    	page += 1
     return repos
-
 
 
 def update_contributions(user_profile):
