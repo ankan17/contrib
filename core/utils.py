@@ -9,7 +9,8 @@ from core.models import UserProfile, Repository
 
 def get_repositories(username):
     """Returns the repositories of a user using the Github API."""
-    repos_url = 'https://api.github.com/users/{}/repos?per_page=100&page='.format(username)
+    repos_url = 'https://api.github.com/users/{}/repos?\
+    per_page=100&page='.format(username)
     page = 1
     repos = []
     while True:
